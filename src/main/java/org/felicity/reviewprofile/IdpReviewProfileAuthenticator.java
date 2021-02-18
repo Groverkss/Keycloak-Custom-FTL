@@ -41,6 +41,10 @@ import org.keycloak.userprofile.profile.DefaultUserProfileContext;
 import org.keycloak.userprofile.profile.representations.AttributeUserProfile;
 import org.keycloak.userprofile.utils.UserUpdateHelper;
 import org.keycloak.userprofile.validation.UserProfileValidationResult;
+import org.keycloak.forms.login.freemarker.model.ProfileBean;
+import org.keycloak.forms.login.LoginFormsProvider;
+import org.keycloak.authentication.requiredactions.util.UpdateProfileContext;
+import org.keycloak.authentication.requiredactions.util.UserUpdateProfileContext;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -60,6 +64,12 @@ public class IdpReviewProfileAuthenticator extends org.keycloak.authentication.a
         return false;
     }
 
+    protected LoginFormsProvider setReviewAttributes (LoginFormsProvider res, SerializedBrokeredIdentityContext userCtxSeralized, BrokeredIdentityContext brokerContext, MultivaluedMap<String, String> formData) {
+        UpdateProfileContext userCtx = (UpdateProfileContext) userCtxSeralized;
+        res.setAttribute("user", new ProfileBean(userCtx, formData));
+        return res;
+    }
+
     @Override
     protected void authenticateImpl(AuthenticationFlowContext context, SerializedBrokeredIdentityContext userCtx, BrokeredIdentityContext brokerContext) {
         IdentityProviderModel idpConfig = brokerContext.getIdpConfig();
@@ -69,10 +79,11 @@ public class IdpReviewProfileAuthenticator extends org.keycloak.authentication.a
             logger.debugf("Identity provider '%s' requires update profile action for broker user '%s'.", idpConfig.getAlias(), userCtx.getUsername());
 
             // No formData for first render. The profile is rendered from userCtx
-            Response challengeResponse = context.form()
-                    .setAttribute(LoginFormsProvider.UPDATE_PROFILE_CONTEXT_ATTR, userCtx)
-                    .setFormData(null)
-                    .createUpdateProfilePage();
+            LoginFormsProvider challengeIntermediate = context.form();
+
+            Response challengeResponse = setReviewAttributes(challengeIntermediate, userCtx, brokerContext, null)
+                .createForm("institute-form.ftl");
+
             context.challenge(challengeResponse);
         } else {
             // Not required to update profile. Marked success
@@ -100,7 +111,7 @@ public class IdpReviewProfileAuthenticator extends org.keycloak.authentication.a
 
         RealmModel realm = context.getRealm();
         return IdentityProviderRepresentation.UPFLM_ON.equals(updateProfileFirstLogin)
-                || (IdentityProviderRepresentation.UPFLM_MISSING.equals(updateProfileFirstLogin) && (!Validation.validateUserMandatoryFields(realm, userCtx)) || !isInstituteSet) ;
+            || (IdentityProviderRepresentation.UPFLM_MISSING.equals(updateProfileFirstLogin) && (!Validation.validateUserMandatoryFields(realm, userCtx)) || !isInstituteSet) ;
     }
 
     @Override
@@ -120,10 +131,10 @@ public class IdpReviewProfileAuthenticator extends org.keycloak.authentication.a
 
         if (errors != null && !errors.isEmpty()) {
             Response challenge = context.form()
-                    .setErrors(errors)
-                    .setAttribute(LoginFormsProvider.UPDATE_PROFILE_CONTEXT_ATTR, userCtx)
-                    .setFormData(formData)
-                    .createUpdateProfilePage();
+                .setErrors(errors)
+                .setAttribute(LoginFormsProvider.UPDATE_PROFILE_CONTEXT_ATTR, userCtx)
+                .setFormData(formData)
+                .createForm("institute-form.ftl");
             context.challenge(challenge);
             return;
         }
