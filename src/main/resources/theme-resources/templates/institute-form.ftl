@@ -9,28 +9,6 @@
 
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="attributes.alias" class="${properties.kcLabelClass!}">Alias</label>
-                </div>
-                <div class="${properties.kcInputWrapperClass!}">
-                    <#if user.attributes.alias?has_content>
-                        <input type="text" id="attributes.alias" name="attributes.alias" value="${(user.attributes.alias!'')}"
-                                class="${properties.kcInputClass!}"
-                                placeholder="What do you go by?" 
-                                readonly
-                                />
-
-                    <#else>
-                        <input type="text" id="attributes.alias" name="attributes.alias" value="${(user.attributes.alias!'')}"
-                                class="${properties.kcInputClass!}"
-                                placeholder="What do you go by?" 
-                                />
-                    </#if>
-                </div>
-            </div>
-
-
-            <div class="${properties.kcFormGroupClass!}">
-                <div class="${properties.kcLabelWrapperClass!}">
                     <label for="username" class="${properties.kcLabelClass!}">Username</label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
@@ -39,7 +17,6 @@
                                 class="${properties.kcInputClass!}"
                                 readonly
                                 />
-
                     <#else>
                         <input type="text" id="username" name="username" value="${(user.username!'')}"
                                 class="${properties.kcInputClass!}" />
@@ -100,16 +77,16 @@
 
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="attributes.institute" class="${properties.kcLabelClass!}">Institute</label>
+                    <label for="user.attributes.institute" class="${properties.kcLabelClass!}">Institute</label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
                     <#if user.attributes.institute?has_content>
-                        <input type="text" id="attributes.institute" name="attributes.institute" value="${(user.attributes.institute!'')}"
+                        <input type="text" id="user.attributes.institute" name="user.attributes.institute" value="${(user.attributes.institute!'')}"
                                 class="${properties.kcInputClass!}"
                                         readonly
                                         />
                     <#else>
-                        <input type="text" id="attributes.institute" name="attributes.institute" value="${(user.attributes.institute!'')}"
+                        <input type="text" id="user.attributes.institute" name="user.attributes.institute" value="${(user.attributes.institute!'')}"
                                 class="${properties.kcInputClass!}" />
                     </#if>
                 </div>

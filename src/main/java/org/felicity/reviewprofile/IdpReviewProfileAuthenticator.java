@@ -128,18 +128,12 @@ public class IdpReviewProfileAuthenticator extends org.keycloak.authentication.a
         AttributeUserProfile updatedProfile = AttributeFormDataProcessor.toUserProfile(formData);
 
         // Set institute in updated profile
-        if (formData.getFirst("attributes.institute") != null) {
-            updatedProfile.getAttributes().setSingleAttribute("institute", formData.getFirst("attributes.institute"));
-        }
-
-        // Set alias in updated profile
-        if (formData.getFirst("attributes.alias") != null) {
-            updatedProfile.getAttributes().setSingleAttribute("alias", formData.getFirst("attributes.alias"));
+        if (formData.getFirst("user.attributes.institute") != null) {
+            updatedProfile.getAttributes().setSingleAttribute("institute", formData.getFirst("user.attributes.institute"));
         }
 
         // Get institute and alias from updated file
         String instituteAttribute = updatedProfile.getAttributes().getFirstAttribute("institute");
-        String aliasAttribute = updatedProfile.getAttributes().getFirstAttribute("alias");
 
         String oldEmail = userCtx.getEmail();
         String newEmail = updatedProfile.getAttributes().getFirstAttribute(UserModel.EMAIL);
@@ -149,10 +143,6 @@ public class IdpReviewProfileAuthenticator extends org.keycloak.authentication.a
 
         if (instituteAttribute == null || instituteAttribute.isEmpty()) {
             errors.add(new FormMessage("institute", "Please specify an Institute"));
-        }
-
-        if (aliasAttribute == null || aliasAttribute.isEmpty()) {
-            errors.add(new FormMessage("alias", "Please specify an Alias"));
         }
 
         if (errors != null && !errors.isEmpty()) {
