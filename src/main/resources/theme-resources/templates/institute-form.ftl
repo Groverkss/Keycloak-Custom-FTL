@@ -3,17 +3,47 @@
     <#if section = "title">
         ${msg("loginTitle", "Information Form")}
     <#elseif section = "header">
-        ${msg("loginTitleHtml", "Please fill thee missing fields")}
+        ${msg("loginTitleHtml", "Please fill the missing fields")}
     <#elseif section = "form">
         <form id="kc-update-institute-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+
+            <div class="${properties.kcFormGroupClass!}">
+                <div class="${properties.kcLabelWrapperClass!}">
+                    <label for="attributes.alias" class="${properties.kcLabelClass!}">Alias</label>
+                </div>
+                <div class="${properties.kcInputWrapperClass!}">
+                    <#if user.attributes.alias?has_content>
+                        <input type="text" id="attributes.alias" name="attributes.alias" value="${(user.attributes.alias!'')}"
+                                class="${properties.kcInputClass!}"
+                                placeholder="What do you go by?" 
+                                readonly
+                                />
+
+                    <#else>
+                        <input type="text" id="attributes.alias" name="attributes.alias" value="${(user.attributes.alias!'')}"
+                                class="${properties.kcInputClass!}"
+                                placeholder="What do you go by?" 
+                                />
+                    </#if>
+                </div>
+            </div>
+
 
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcLabelWrapperClass!}">
                     <label for="username" class="${properties.kcLabelClass!}">Username</label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
-                    <input type="text" id="username" name="username" value="${(user.username!'')}"
-                            class="${properties.kcInputClass!}" />
+                    <#if user.username?has_content>
+                        <input type="text" id="username" name="username" value="${(user.username!'')}"
+                                class="${properties.kcInputClass!}"
+                                readonly
+                                />
+
+                    <#else>
+                        <input type="text" id="username" name="username" value="${(user.username!'')}"
+                                class="${properties.kcInputClass!}" />
+                    </#if>
                 </div>
             </div>
 
@@ -22,8 +52,15 @@
                     <label for="email" class="${properties.kcLabelClass!}">Email</label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
-                    <input type="text" id="email" name="email" value=""
-                            class="${properties.kcInputClass!}" />
+                    <#if user.email?has_content>
+                        <input type="text" id="email" name="email" value="${(user.email!'')}"
+                                class="${properties.kcInputClass!}"
+                                    readonly
+                                    />
+                    <#else>
+                        <input type="text" id="email" name="email" value="${(user.email!'')}"
+                                class="${properties.kcInputClass!}" />
+                    </#if>
                 </div>
             </div>
 
@@ -32,8 +69,15 @@
                     <label for="firstName" class="${properties.kcLabelClass!}">Firstname</label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
-                    <input type="text" id="firstName" name="firstName" value=""
-                            class="${properties.kcInputClass!}" />
+                    <#if user.firstName?has_content>
+                        <input type="text" id="firstName" name="firstName" value="${(user.firstName!'')}"
+                                class="${properties.kcInputClass!}"
+                                        readonly
+                                        />
+                    <#else>
+                        <input type="text" id="firstName" name="firstName" value="${(user.firstName!'')}"
+                                class="${properties.kcInputClass!}" />
+                    </#if>
                 </div>
             </div>
 
@@ -42,18 +86,32 @@
                     <label for="lastName" class="${properties.kcLabelClass!}">Lastname</label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
-                    <input type="text" id="lastName" name="lastName" value=""
-                            class="${properties.kcInputClass!}" />
+                    <#if user.lastName?has_content>
+                        <input type="text" id="lastName" name="lastName" value="${(user.lastName!'')}"
+                                class="${properties.kcInputClass!}"
+                                        readonly
+                                        />
+                    <#else>
+                        <input type="text" id="lastName" name="lastName" value="${(user.lastName!'')}"
+                                class="${properties.kcInputClass!}" />
+                    </#if>
                 </div>
             </div>
 
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="institute" class="${properties.kcLabelClass!}">Institute</label>
+                    <label for="attributes.institute" class="${properties.kcLabelClass!}">Institute</label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
-                    <input type="text" id="institute" name="institute" value=""
-                            class="${properties.kcInputClass!}" />
+                    <#if user.attributes.institute?has_content>
+                        <input type="text" id="attributes.institute" name="attributes.institute" value="${(user.attributes.institute!'')}"
+                                class="${properties.kcInputClass!}"
+                                        readonly
+                                        />
+                    <#else>
+                        <input type="text" id="attributes.institute" name="attributes.institute" value="${(user.attributes.institute!'')}"
+                                class="${properties.kcInputClass!}" />
+                    </#if>
                 </div>
             </div>
 
