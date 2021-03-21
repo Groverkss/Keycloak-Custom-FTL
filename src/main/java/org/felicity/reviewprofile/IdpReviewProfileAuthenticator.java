@@ -54,6 +54,7 @@ import java.util.stream.Stream;
 
 /**
  * @author <a href="mailto:mposolda@redhat.com">Marek Posolda</a>
+ * @author <a href="mailto:groverkss@gmail.com">Kunwar Shaanjeet Singh Grover</a>
  */
 public class IdpReviewProfileAuthenticator extends org.keycloak.authentication.authenticators.broker.AbstractIdpAuthenticator {
 
