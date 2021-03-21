@@ -70,6 +70,16 @@ public class IdpReviewProfileAuthenticator extends org.keycloak.authentication.a
         return res;
     }
 
+    protected boolean checkUsernameExists(AuthenticationFlowContext context, String username) {
+        UserModel existingUser = context.getSession().users().getUserByUsername(username, context.getRealm());
+        return existingUser != null;
+    }
+
+    protected boolean checkEmailExists(AuthenticationFlowContext context, String email) {
+        UserModel existingUser = context.getSession().users().getUserByEmail(email, context.getRealm());
+        return existingUser != null;
+    }
+
     @Override
     protected void authenticateImpl(AuthenticationFlowContext context, SerializedBrokeredIdentityContext userCtx, BrokeredIdentityContext brokerContext) {
         IdentityProviderModel idpConfig = brokerContext.getIdpConfig();
@@ -109,9 +119,12 @@ public class IdpReviewProfileAuthenticator extends org.keycloak.authentication.a
 
         boolean isInstituteSet = institute != null && !institute.isEmpty();
 
+        boolean uniqueEmail = !checkEmailExists(context, brokerContext.getEmail());
+        boolean uniqueUsername = !checkUsernameExists(context, brokerContext.getUsername());
+
         RealmModel realm = context.getRealm();
         return IdentityProviderRepresentation.UPFLM_ON.equals(updateProfileFirstLogin)
-            || (IdentityProviderRepresentation.UPFLM_MISSING.equals(updateProfileFirstLogin) && (!Validation.validateUserMandatoryFields(realm, userCtx)) || !isInstituteSet) ;
+            || (IdentityProviderRepresentation.UPFLM_MISSING.equals(updateProfileFirstLogin) && (!Validation.validateUserMandatoryFields(realm, userCtx)) || !isInstituteSet || !uniqueUsername || !uniqueEmail);
     }
 
     @Override
@@ -141,12 +154,26 @@ public class IdpReviewProfileAuthenticator extends org.keycloak.authentication.a
         UserProfileValidationResult result = profileProvider.validate(DefaultUserProfileContext.forIdpReview(userCtx), updatedProfile);
         List<FormMessage> errors = Validation.getFormErrorsFromValidation(result);
 
+        // Add institute errors
         if (instituteAttribute == null || instituteAttribute.isEmpty()) {
             errors.add(new FormMessage("institute", "Please specify an Institute"));
         }
 
-        if (errors != null && !errors.isEmpty()) {
+        // Get username and email specified 
+        String formEmail = updatedProfile.getAttributes().getFirstAttribute(UserModel.EMAIL);
+        String formUsername = updatedProfile.getAttributes().getFirstAttribute(UserModel.USERNAME);
 
+        // Check if already exists and set errors
+
+        if (checkUsernameExists(context, formUsername)) {
+            errors.add(new FormMessage("username", "Username already exists. Please use something else"));
+        }
+
+        if (checkEmailExists(context, formEmail)) {
+            errors.add(new FormMessage("email", "Email already exists. Please login using your existing account."));
+        }
+
+        if (errors != null && !errors.isEmpty()) {
             LoginFormsProvider challengeIntermediate = context.form()
                 .setErrors(errors);
 

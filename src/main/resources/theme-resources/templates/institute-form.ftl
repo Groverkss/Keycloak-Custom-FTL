@@ -12,15 +12,8 @@
                     <label for="username" class="${properties.kcLabelClass!}">Username</label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
-                    <#if user.username?has_content>
-                        <input type="text" id="username" name="username" value="${(user.username!'')}"
-                                class="${properties.kcInputClass!}"
-                                readonly
-                                />
-                    <#else>
-                        <input type="text" id="username" name="username" value="${(user.username!'')}"
-                                class="${properties.kcInputClass!}" />
-                    </#if>
+                    <input type="text" id="username" name="username" value="${(user.username!'')}"
+                            class="${properties.kcInputClass!}" />
                 </div>
             </div>
 
